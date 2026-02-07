@@ -1,4 +1,4 @@
-import Styles from "./Signin.module.css";
+import Styles from "./SignIn.module.css";
 
 const SignIn = () => {
     return (
