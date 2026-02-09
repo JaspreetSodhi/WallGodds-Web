@@ -125,13 +125,10 @@
     font-weight: 400;
     cursor: pointer;
     
-    /* Removing the transition and hover effect */
-    /* transition: all 0.2s ease;  <-- Removed */
+    
 }
 
-/* REMOVED: .socialBtn:hover block is completely gone */
 
-/* --- Divider Container --- */
 .dividerContainer {
     display: flex;
     justify-content: center; 
