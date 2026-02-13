@@ -19,8 +19,8 @@ export const Footer = () => {
             {/* Right section */}
             <div className={Styles.socials}>
                 {socialLinks.map((link, index) => (
-                    <a key={index} href={link.url} title={`WallGodds's ${link.name}`} target="_blank" aria-label={link.name} rel="" className={Styles.iconBtn}>
-                        <img src={link.path} alt={link.name} />
+                    <a key={index} href={link.url} title={`WallGodds's ${link.name}`} target="_blank" aria-label={link.name} rel="noopener noreferrer" className={Styles.iconBtn}>
+                        <img src={link.path} alt={link.name} className={Styles.iconImage}/>
                     </a>
                 ))}
             </div>
