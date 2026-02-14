@@ -3,7 +3,7 @@ import Style from "./NavBar.module.css";
 import ThemeToggle from "../../ThemeModule/ThemeToggle";
 import { useState, useRef, useEffect } from "react";
 
-const NavBar = () => {
+const NavBar = ({ className }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const searchRef = useRef(null);
@@ -25,7 +25,7 @@ const NavBar = () => {
   }, [searchOpen]);
 
   return (
-    <div className={Style.navbar}>
+    <div className={`${Style.navbar} ${className || ""}`}>
       <div className={Style.logo}>
         <NavLink to="/">
           <img src={Logo} alt="WallGodds Logo" data-logo />
