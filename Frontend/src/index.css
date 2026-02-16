@@ -5,15 +5,23 @@
     font-family: "Poppins", sans-serif;
 }
 
+html, body, #root {
+    height: 100%;
+    overflow-x: hidden;
+}
+
 body {
     margin: 0;
     font-family: "Poppins", sans-serif;
     background-image: url("/Light_mode_bg.webp");
     background-size: cover;
     background-position: center;
+    overflow-y: auto;
     background-repeat: no-repeat;
     background-attachment: fixed;
     transition:
         background-image 0.5s cubic-bezier(0.4, 0, 0.2, 1),
         color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+

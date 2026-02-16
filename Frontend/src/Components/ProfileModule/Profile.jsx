@@ -18,13 +18,6 @@ const InstaIcon = () => (
     </svg>
 );
 
-const GlobeIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="2" y1="12" x2="22" y2="12"></line>
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-    </svg>
-);
 
 const Profile = () => {
     const [socials, setSocials] = useState({
@@ -48,16 +41,18 @@ const Profile = () => {
             </div>
 
             <div className={Styles.container}>
+                {/* Main Card */}
                 <div className={Styles.temp}>
                     <div className={Styles.closeBtn}></div>
 
                     <div className={Styles.contentGrid}>
                         {/* LEFT COLUMN */}
                         <div className={Styles.leftCol}>
+                            {/* Profile Pic overlapping top */}
                             <div className={`${Styles.wireframeBox} ${Styles.profilePic}`}></div>
                             
+                            {/* Socials Box - Vertical Layout (Corrected) */}
                             <div className={Styles.socialsBox}>
-                                {/* X (Twitter) Row */}
                                 <div className={Styles.socialRow}>
                                     <div className={Styles.iconWrapper}>
                                         <XIcon />
@@ -75,7 +70,6 @@ const Profile = () => {
                                     </div>
                                 </div>
 
-                                {/* Instagram Row */}
                                 <div className={Styles.socialRow}>
                                     <div className={Styles.iconWrapper}>
                                         <InstaIcon />
@@ -93,10 +87,9 @@ const Profile = () => {
                                     </div>
                                 </div>
 
-                                {/* Portfolio Row */}
                                 <div className={Styles.socialRow}>
                                     <div className={Styles.iconWrapper}>
-                                        <GlobeIcon />
+                                        <img src="/socialLinks/ion_earth-sharp.png" />
                                     </div>
                                     <div className={Styles.inputPill}>
                                         <input
@@ -116,9 +109,17 @@ const Profile = () => {
                         {/* RIGHT COLUMN */}
                         <div className={Styles.rightCol}>
                             <div className={`${Styles.wireframeBox} ${Styles.banner}`}></div>
-                            <div className={Styles.bioBox}>
-                                <p>Add your bio here</p>
-                            </div>
+                            
+<div className={Styles.bioBox}>
+    <textarea
+        name="bio"
+        value={socials.bio}
+        onChange={handleInputChange}
+        placeholder="Add your bio here"
+        spellCheck="false"
+    />
+</div>
+                            
                             <div className={Styles.badgesSection}>
                                 <h3 className={Styles.sectionTitle}>Your Badges</h3>
                                 <div className={Styles.badgesList}>
@@ -131,6 +132,7 @@ const Profile = () => {
                     </div>
                 </div>
 
+                {/* Your Walls Section */}
                 <div className={Styles.wallsWrapper}>
                     <h3 className={Styles.wallsTitle}>Your Walls</h3>
                     <div className={Styles.wallsEmptyState}>
