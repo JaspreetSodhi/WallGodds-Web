@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import {useForm }from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Styles from "./Upload.module.css";
 import NavBar from "../CommonModule/NavBarModule/NavBar";
 import Footer from "../CommonModule/FooterModule/Footer";
@@ -11,168 +11,171 @@ import UploadIconImg from "../GalleryModule/GallaryAssets/upload-icon.png";
 
 
 const Upload = () => {
-    const [previewUrl, setPreviewUrl] = useState(null);
-    const [wallpapers, setWallpapers] = useState([]);
-    const [leftWallpapers, setLeftWallpapers] = useState([]);
-    const [rightWallpapers, setRightWallpapers] = useState([]);
-    const [isDraggingOver, setIsDraggingOver] = useState(false);
-    const fileInputRef = useRef(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [wallpapers, setWallpapers] = useState([]);
+  const [leftWallpapers, setLeftWallpapers] = useState([]);
+  const [rightWallpapers, setRightWallpapers] = useState([]);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const [count,setCount]=useState(5)
+  const [previewFile, setPreviewFile] = useState(null)
+  const fileInputRef = useRef(null);
 
-    const categories=["Abstract","Nature","Anime","Art","Movies","Vehicles","Sports","Gaming","Travels"
-    ,"Spiritual","Music","AI Gen"];
-   
-    const {
-       register ,
-       handleSubmit,
-       setValue,
-       watch,
-       formState: {errors}
-       }=useForm();
+  const categories = ["Abstract", "Nature", "Anime", "Art", "Movies", "Vehicles", "Sports", "Gaming", "Travels"
+    , "Spiritual", "Music", "AI Gen"];
 
-    
-    const onSubmit =(data)=>{
-       if (!previewUrl) {
-    alert("Please upload a wallpaper first");
-    return;
-  }
-    const wallpaper = {
-    wallpaperName: data.wallpaperName,
-    device: data.device,
-    category: data.category,
-    description: data.description || "",
-    image: previewUrl,
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors }
+  } = useForm();
+
+
+  const onSubmit = () => {
+  if (!previewFile) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const newWallpaper = {
+        id: Date.now(),
+        url: e.target.result,
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+      };
+
+      const updated = [...wallpapers, newWallpaper];
+      setWallpapers(updated);
+      distributeWallpapers(updated);
+
+     
+      
+      setPreviewFile(null);
+      setCount((prev) => prev - 1);
+      if(count==0)
+        setPreviewUrl(null)
+      reset()
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(previewFile);
+};
+
+  const getDeviceType = (width, height) => {
+    const longer = Math.max(width, height);
+    const shorter = Math.min(width, height);
+    const ratio = Number((longer / shorter).toFixed(2));
+    const isPortrait = height > width;
+
+    if (ratio >= 2.0) return "mobile";
+
+    if (ratio >= 1.7 && ratio < 2.0) {
+      return isPortrait ? "mobile" : "laptop";
+    }
+    if (ratio < 1.7) return "tablet";
+
   };
 
-  reader.readAsDataURL(file);
-   
-   };
 
-    const getDeviceType=(width,height)=>{
-          const longer = Math.max(width, height); 
-           const shorter = Math.min(width, height); 
-           const ratio = Number((longer / shorter).toFixed(2)); 
-           const isPortrait = height > width; 
-          
-           if(ratio>=2.0)return "mobile";
-           
-           if(ratio>=1.7 && ratio<2.0){
-              return isPortrait ?"mobile":"laptop"; 
-             }
-            if(ratio<1.7) return "tablet";
-            
-        };
-    
+  // Distribute wallpapers between columns based on height
+  const distributeWallpapers = useCallback((allWallpapers) => {
+    if (allWallpapers.length === 0) {
+      setLeftWallpapers([]);
+      setRightWallpapers([]);
+      return;
+    }
 
-    // Distribute wallpapers between columns based on height
-    const distributeWallpapers = useCallback((allWallpapers) => {
-        if (allWallpapers.length === 0) {
-            setLeftWallpapers([]);
-            setRightWallpapers([]);
-            return;
+    const left = [];
+    const right = [];
+    let leftHeight = 0;
+    let rightHeight = 0;
+
+    allWallpapers.forEach((wallpaper, index) => {
+      // Calculate proportional height based on aspect ratio
+      const proportionalHeight = wallpaper.height / wallpaper.width;
+
+      // First two wallpapers: left, then right
+      if (index === 0) {
+        left.push(wallpaper);
+        leftHeight += proportionalHeight;
+      } else if (index === 1) {
+        right.push(wallpaper);
+        rightHeight += proportionalHeight;
+      } else {
+        // After that, add to the column with smaller height
+        if (leftHeight <= rightHeight) {
+          left.push(wallpaper);
+          leftHeight += proportionalHeight;
+        } else {
+          right.push(wallpaper);
+          rightHeight += proportionalHeight;
         }
+      }
+    });
 
-        const left = [];
-        const right = [];
-        let leftHeight = 0;
-        let rightHeight = 0;
+    setLeftWallpapers(left);
+    setRightWallpapers(right);
+  }, []);
 
-        allWallpapers.forEach((wallpaper, index) => {
-            // Calculate proportional height based on aspect ratio
-            const proportionalHeight = wallpaper.height / wallpaper.width;
+ const handleFile = (file) => {
+  if (!file || !file.type.startsWith("image/")) return
 
-            // First two wallpapers: left, then right
-            if (index === 0) {
-                left.push(wallpaper);
-                leftHeight += proportionalHeight;
-            } else if (index === 1) {
-                right.push(wallpaper);
-                rightHeight += proportionalHeight;
-            } else {
-                // After that, add to the column with smaller height
-                if (leftHeight <= rightHeight) {
-                    left.push(wallpaper);
-                    leftHeight += proportionalHeight;
-                } else {
-                    right.push(wallpaper);
-                    rightHeight += proportionalHeight;
-                }
-            }
-        });
+  const url = URL.createObjectURL(file)
+  setPreviewUrl(url)
+  setPreviewFile(file)
 
-        setLeftWallpapers(left);
-        setRightWallpapers(right);
-    }, []);
+  const img = new Image()
+  img.onload = () => {
+    const deviceType = getDeviceType(img.width, img.height)
+    setValue("device", deviceType)
+  };
+  img.src = url
+}
 
-    const handleFile = useCallback((file) => {
-        if (!file || !file.type.startsWith("image/")) return;
-        const url = URL.createObjectURL(file);
-        
-        setPreviewUrl(url);
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const previewUrl=e.target.result;
-            const img = new Image();
-            img.onload = () => {
-                const deviceType=getDeviceType(img.width,img.height);
-                setValue("device",deviceType);
-                
-                const newWallpaper = {
-                    id: Date.now(),
-                    url: e.target.result,
-                    width: img.naturalWidth,
-                    height: img.naturalHeight,
-                };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDraggingOver(true);
+  };
 
-                const updatedWallpapers = [...wallpapers, newWallpaper];
-                setWallpapers(updatedWallpapers);
-                distributeWallpapers(updatedWallpapers);
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }, [wallpapers, distributeWallpapers,setValue]);
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDraggingOver(false);
+  };
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        setIsDraggingOver(true);
-    };
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDraggingOver(false);
+    handleFile(e.dataTransfer.files?.[0]);
+  };
 
-    const handleDragLeave = (e) => {
-        e.preventDefault();
-        setIsDraggingOver(false);
-    };
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click();
+  };
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        setIsDraggingOver(false);
-        handleFile(e.dataTransfer.files?.[0]);
-    };
+  const handleFileInputChange = (e) => {
+    handleFile(e.target.files?.[0]);
+    e.target.value = "";
+  };
 
-    const handleBrowseClick = () => {
-        fileInputRef.current?.click();
-    };
 
-    const handleFileInputChange = (e) => {
-        handleFile(e.target.files?.[0]);
-        e.target.value = "";
-    };
-     
-
-    return (
+  return (
         <>
-            <div className={Styles.navbarWrapper}>
-                <NavBar />
-            </div>
+      <div className={Styles.navbarWrapper}>
+        <NavBar />
+      </div>
 
-            <div className={Styles.container}>
-                
-                <div
-                    className={`${Styles.uploadBox} ${isDraggingOver ? Styles.dragging : ""}`}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                >
-                    {previewUrl ? (
+      <div className={Styles.container}>
+
+        <div
+          className={`${Styles.uploadBox} ${isDraggingOver ? Styles.dragging : ""}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          {previewUrl ? (
                         <div className={Styles.previewFormContainer}>
                         <div className={Styles.previewWrapper}>
                             <img
@@ -180,7 +183,16 @@ const Upload = () => {
                                 alt="Selected wallpaper preview"
                                 className={Styles.previewImage}
                             />
+                            <div className={Styles.uploadoption}> 
+                              {count>0 && <label className={Styles.uploadcontainer}>
+                               <div className={Styles.uploadicon}> 
+                                <img src="/uploadicon.svg" alt="upload" />
+                                 </div> 
+                                 <p className={Styles.uploadtext}> Add upto {count} more images </p> 
+                                 <input type="file" accept="image/*" onChange={(e) => handleFile(e.target.files[0])} hidden /> 
+                                 </label>}
                         </div> 
+                        </div>
                                <form className={Styles.form} onSubmit={handleSubmit(onSubmit)}>
                                 <div className={Styles.row}>
                                   <div className={Styles.field}>
@@ -449,8 +461,8 @@ const Upload = () => {
                     <Footer />
                 </div>
             </div>
-        </>
-    );
+      </>
+      );
 };
 
-export default Upload;
+      export default Upload;
