@@ -70,13 +70,13 @@ const NavBar = forwardRef(({ className }, ref) => {
                             rel="noopener noreferrer"
                             className={Style.github}>
                             Github
+                            <img
+                                className={Style.github_arrow}
+                                src={Github_arrow}
+                                alt="Arrow"
+                                data-github-arrow
+                            />
                         </a>
-                        <img
-                            className={Style.github_arrow}
-                            src={Github_arrow}
-                            alt="Arrow"
-                            data-github-arrow
-                        />
                     </li>
                 </ul>
             </nav>

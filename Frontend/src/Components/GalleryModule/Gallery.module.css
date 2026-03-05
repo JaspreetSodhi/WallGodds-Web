@@ -141,6 +141,28 @@
   font-weight: 400;
 }
 
+.temp a {
+  text-decoration: none;
+  color: #3c56b1;
+  font-family: "Gued", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+/* dark theme */
+:global(.dark-theme) .temp {
+  border-radius: 0.92675rem;
+  opacity: 1;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+:global(.dark-theme) .categoryTitle {
+  color: #fff;
+}
+
+/* device selector */
+
 .deviceSelector {
   display: flex;
   justify-content: center;
