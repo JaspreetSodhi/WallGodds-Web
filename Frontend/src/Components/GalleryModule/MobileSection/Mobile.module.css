@@ -17,8 +17,25 @@
 }
 
 /* ================= MOBILE RESPONSIVENESS ================= */
+@media (max-width: 320px) {
 
-@media (max-width: 768px) {
+  .mobileFrame {
+    padding: 0 1rem;
+  }
+
+  .imgGrid {
+    gap: 0.875rem;
+  }
+}
+
+@media (max-width: 425px) {
+
+  .mobileFrame {
+    padding: 0 1.25rem;
+  }
+}
+
+@media (max-width: 700px) {
 
   .mobileFrame {
     width: 100%;
@@ -32,20 +49,14 @@
   }
 }
 
-@media (max-width: 425px) {
-
-  .mobileFrame {
-    padding: 0 1.25rem;
-  }
-}
-
-@media (max-width: 320px) {
-
-  .mobileFrame {
-    padding: 0 1rem;
-  }
+/* ================= TABLET RESPONSIVENESS ================= */
+@media (min-width: 701px) and (max-width: 1195px) {
 
   .imgGrid {
-    gap: 0.875rem;
+    width: 650px;
+    margin: 0 auto;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 0 2px;
   }
 }
